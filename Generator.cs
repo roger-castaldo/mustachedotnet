@@ -1,0 +1,32 @@
+﻿using Org.Reddragonit.MustacheDotNet.Components;
+using Org.Reddragonit.MustacheDotNet.Utilities;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+
+namespace Org.Reddragonit.MustacheDotNet
+{
+    public static class Generator
+    {
+        public static void GenerateCode(Stream source, Stream destination,bool compress)
+        {
+            StreamReader sr = new StreamReader(source);
+            StreamWriter sw = new StreamWriter(destination);
+            sw.Write(GenerateCode(sr.ReadToEnd(),compress));
+            sw.Flush();
+        }
+
+        public static string GenerateCode(string source,bool compress)
+        {
+            StringBuilder sb = new StringBuilder();
+            string var = "data1";
+            Parser parser = new Parser(source);
+            sb.AppendLine(string.Format("{1}function({0}){{var ret='';", var,(parser.MethodName==null ? "" : parser.MethodName+"=")));
+            foreach (IComponent comp in parser.Parts)
+                sb.AppendLine(comp.ToJSCode(var));
+            sb.AppendLine("return ret;}");
+            return (compress ? JSMinifier.Minify(sb.ToString()) : sb.ToString());
+        }
+    }
+}
