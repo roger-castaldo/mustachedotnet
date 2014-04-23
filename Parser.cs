@@ -88,7 +88,7 @@ namespace Org.Reddragonit.MustacheDotNet
             }
             if (_buf != "")
                 ret.Add(new StringConstant(_buf, _IsInPre(matches)));
-            ret = _RecurMergeIfs(0,ret);
+            ret = _RecurMergeIfs(null,0,ret);
             return ret;
         }
 
@@ -106,7 +106,7 @@ namespace Org.Reddragonit.MustacheDotNet
             return ret;
         }
 
-        private List<IComponent> _RecurMergeIfs(int index,List<IComponent> comps)
+        private List<IComponent> _RecurMergeIfs(string ifText,int index,List<IComponent> comps)
         {
             List<IComponent> ret = new List<IComponent>();
             for (int x = index; x < comps.Count; x++)
@@ -116,12 +116,13 @@ namespace Org.Reddragonit.MustacheDotNet
                     case '#':
                     case '^':
                         IfComponent ifc = (IfComponent)comps[x];
-                        ifc.Children = _RecurMergeIfs(x + 1, comps);
+                        ifc.Children = _RecurMergeIfs(ifc.Text.Substring(1),x+1, comps);
                         ret.Add(ifc);
-                        x += ifc.Children.Count+1;
+                        x += ifc.Length;
                         break;
                     case '/':
-                        x = comps.Count;
+                        if ((ifText == null ? "" : ifText) == comps[x].Text.Substring(1))
+                            return ret;
                         break;
                     default:
                         ret.Add(comps[x]);
