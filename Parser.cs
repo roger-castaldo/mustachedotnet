@@ -2,11 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Org.Reddragonit.MustacheDotNet
 {
     internal class Parser
     {
+        private static readonly Regex _regPre = new Regex("<pre[^>]*>((?!</pre>).)+</pre>", RegexOptions.Compiled | RegexOptions.Singleline);
+
         private string _text;
         private int _curIndex;
         private string _buf;
@@ -32,6 +35,7 @@ namespace Org.Reddragonit.MustacheDotNet
         private List<IComponent> _Parse()
         {
             List<IComponent> ret = new List<IComponent>();
+            MatchCollection matches = _regPre.Matches(_text);
             string _curChars = "";
             while (_curIndex < _text.Length)
             {
@@ -42,7 +46,7 @@ namespace Org.Reddragonit.MustacheDotNet
                     case "{{":
                         _buf = _buf.TrimEnd('{');
                         if (_buf.Length > 0)
-                            ret.Add(new StringConstant(_buf));
+                            ret.Add(new StringConstant(_buf,_IsInPre(matches)));
                         _buf = "";
                         _curIndex++;
                         string commandText = _ExtractCommand();
@@ -83,8 +87,22 @@ namespace Org.Reddragonit.MustacheDotNet
                 }
             }
             if (_buf != "")
-                ret.Add(new StringConstant(_buf));
+                ret.Add(new StringConstant(_buf, _IsInPre(matches)));
             ret = _RecurMergeIfs(0,ret);
+            return ret;
+        }
+
+        private bool _IsInPre(MatchCollection matches)
+        {
+            bool ret = false;
+            foreach (Match m in matches)
+            {
+                if (m.Index <= _curIndex && m.Index + m.Length >= _curIndex)
+                {
+                    ret = true;
+                    break;
+                }
+            }
             return ret;
         }
 
