@@ -77,6 +77,7 @@ namespace Org.Reddragonit.MustacheDotNet
                                 ret.Add(new VariableComponent(commandText));
                                 break;
                         }
+                        _curChars = _text[_curIndex-1].ToString();
                         if (_text[_curIndex] == '}')
                             _curIndex++;
                         break;

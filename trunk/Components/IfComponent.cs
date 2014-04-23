@@ -49,10 +49,27 @@ namespace Org.Reddragonit.MustacheDotNet.Components
             int num = int.Parse(_RegNum.Match(dataVariable).Value);
             dataVariable = dataVariable.Replace(num.ToString(), "");
             string subCode = "";
-            foreach (IComponent comp in _children)
-                subCode += comp.ToJSCode(dataVariable+(num+1).ToString());
-            ret += string.Format(
-@"if ({0}{1}){{
+            if (_text.Substring(1).StartsWith("%"))
+            {
+                foreach (IComponent comp in _children)
+                    subCode += comp.ToJSCode(dataVariable + num.ToString());
+                FunctionComponent fc = new FunctionComponent(_text.Substring(1));
+                ret = fc.ToJSCode(dataVariable);
+                ret = ret.Substring(5);
+                ret = ret.Substring(0, ret.LastIndexOf("==undefined ? ''"));
+                ret = string.Format(
+@"if{0}){{
+{1}
+}}",
+   ret,
+   subCode);
+            }
+            else
+            {
+                foreach (IComponent comp in _children)
+                    subCode += comp.ToJSCode(dataVariable + (num + 1).ToString());
+                ret += string.Format(
+    @"if ({0}{1}){{
     if (Array.isArray({1})){{
         for(var x{2}=0;x{2}<{1}.length;x{2}++){{
             {3}=({1}.at==undefined ? {1}[x{2}] : {1}.at(x{2}));
@@ -69,6 +86,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
        dataVariable+(num+1).ToString(),
        subCode
  });
+            }
             return ret;
         }
     }
