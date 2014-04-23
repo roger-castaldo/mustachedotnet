@@ -60,7 +60,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
                     sb.Append(_text[index]);
                     index++;
                 }
-                return "ret+='" + sb.ToString().Trim() + "';";
+                return (sb.ToString().Trim() == "" ? "" : "ret+='" + sb.ToString().Trim() + "';");
             }
         }
 

@@ -23,6 +23,21 @@ namespace Org.Reddragonit.MustacheDotNet.Components
             _text = text;
         }
 
+        public int Length
+        {
+            get
+            {
+                int ret = 0;
+                foreach (IComponent child in _children)
+                {
+                    ret++;
+                    if (child is IfComponent)
+                        ret += ((IfComponent)child).Length;
+                }
+                return ret+1;
+            }
+        }
+
         public string Text
         {
             get { return _text; }
