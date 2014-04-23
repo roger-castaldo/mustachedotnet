@@ -11,7 +11,7 @@ namespace Org.Reddragonit.MustacheDotNet
             if (variableName.StartsWith("$1"))
             {
                 if (variableName.Contains("."))
-                    return CreateVariableString(dataVariable,variableName.Substring(0, variableName.IndexOf(".")));
+                    return CreateVariableString(dataVariable,variableName.Substring(variableName.IndexOf(".")+1));
                 else
                     return dataVariable;
             }
