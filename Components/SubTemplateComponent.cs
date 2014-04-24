@@ -19,7 +19,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
 
         public string ToJSCode(string dataVariable)
         {
-            return string.Format("ret+={0}({1});", _text.Substring(2), dataVariable);
+            return string.Format("ret+={0}({1});", _text.Substring(1), dataVariable);
         }
     }
 }
