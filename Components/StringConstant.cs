@@ -55,11 +55,8 @@ namespace Org.Reddragonit.MustacheDotNet.Components
                     }
                     m = _regTag.Match(_text, index);
                 }
-                while (index < _text.Length)
-                {
-                    sb.Append(_text[index]);
-                    index++;
-                }
+                if (index < _text.Length)
+                    sb.Append(_text.Substring(index).Replace("\t", "").Replace("\n", "").Replace("\r", "").Replace("'", "\\'"));
                 return (sb.ToString().Trim() == "" ? "" : "ret+='" + sb.ToString().Trim() + "';");
             }
         }
