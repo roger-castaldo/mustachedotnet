@@ -70,7 +70,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
                     subCode += comp.ToJSCode(dataVariable + (num + 1).ToString());
                 ret += string.Format(
     @"if ({0}{1}){{
-    if (Array.isArray({1})){{
+    if (Array.isArray({1})||({1}).at!=undefined){{
         for(var x{2}=0;x{2}<{1}.length;x{2}++){{
             {3}=({1}.at==undefined ? {1}[x{2}] : {1}.at(x{2}));
             {4}

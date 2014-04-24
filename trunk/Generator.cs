@@ -19,6 +19,8 @@ namespace Org.Reddragonit.MustacheDotNet
 
         public static string GenerateCode(string source,bool compress)
         {
+            if (source == "")
+                return "";
             StringBuilder sb = new StringBuilder();
             string var = "data1";
             Parser parser = new Parser(source);
