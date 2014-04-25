@@ -48,7 +48,28 @@ namespace Org.Reddragonit.MustacheDotNet.Components
                 switch(tmp[x][0]){
                     case '\'':
                     case '"':
-                        sb.Append(tmp[x] + (x + 1 == tmp.Count ? "" : ","));
+                        List<string> splt = _SplitVariable(tmp[x]);
+                        foreach(string str in splt){
+                            switch(str[0]){
+                                case '\'':
+                                case '"':
+                                    sb.Append(str);
+                                    break;
+                                default:
+                                    switch(str[0]){
+                                        case '+':
+                                            sb.Append(str[0]);
+                                            if (str.Length > 1)
+                                                sb.Append(Utility.CreateVariableString(dataVariable, str.Substring(1)));
+                                            break;
+                                        default:
+                                            throw new Exception("Unable to parse function code");
+                                            break;
+                                    }
+                                    break;
+                            }
+                        }
+                        sb.Append((x + 1 == tmp.Count ? "" : ","));
                         break;
                     default:
                         sb.Append(Utility.CreateVariableString(dataVariable,tmp[x])+(x+1==tmp.Count ? "" : ","));
@@ -57,6 +78,40 @@ namespace Org.Reddragonit.MustacheDotNet.Components
             }
             sb.AppendLine(")");
             return string.Format("ret+=({0}==undefined ? '' : {0}.toString());", sb);
+        }
+
+        private List<string> _SplitVariable(string variable)
+        {
+            List<string> ret = new List<string>();
+            string buffer = "";
+            for (int x = 0; x < variable.Length; x++)
+            {
+                switch (variable[x])
+                {
+                    case '\'':
+                    case '"':
+                        if (buffer.Trim().Length > 0)
+                            ret.Add(buffer.Trim());
+                        buffer = variable[x].ToString();
+                        x++;
+                        while (variable[x] != buffer[0])
+                        {
+                            buffer += variable[x];
+                            x++;
+                        }
+                        buffer += variable[x];
+                        ret.Add(buffer);
+                        buffer = "";
+                        break;
+                    default:
+                        buffer+=variable[x];
+                        break;
+
+                }
+            }
+            if (buffer.Trim().Length > 0)
+                ret.Add(buffer.Trim());
+            return ret;
         }
 
         private string _ProcessQuote(ref int x,char quote)
