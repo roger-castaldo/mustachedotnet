@@ -57,7 +57,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
                 }
                 if (index < _text.Length)
                     sb.Append(_text.Substring(index).Replace("\t", "").Replace("\n", "").Replace("\r", "").Replace("'", "\\'"));
-                return (sb.ToString().Trim() == "" ? "" : "ret+='" + sb.ToString().Trim() + "';");
+                return (sb.ToString().Trim() == "" ? "" : "ret+='" + sb.ToString() + "';");
             }
         }
 
