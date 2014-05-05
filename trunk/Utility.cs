@@ -7,8 +7,7 @@ namespace Org.Reddragonit.MustacheDotNet
 {
     internal static class Utility
     {
-        private static readonly Regex _regNum = new Regex("^-\\d+", RegexOptions.Compiled | RegexOptions.ECMAScript);
-
+        
         public static string CreateVariableString(string dataVariable, string variableName)
         {
             if (variableName.StartsWith("$1"))
@@ -20,16 +19,11 @@ namespace Org.Reddragonit.MustacheDotNet
             }
             else if (variableName.StartsWith("global:"))
                 return CreateVariableString(string.Format(Generator.DATA_VARIABLE_FORMAT, 1),variableName.Substring("global:".Length));
-            else if (variableName.StartsWith("-"))
+            else if (variableName.StartsWith("parent:"))
             {
-                Match m = _regNum.Match(variableName);
-                if (m.Value!=variableName)
-                    variableName = variableName.Substring(m.Length);
-                if (variableName.StartsWith("."))
-                    variableName = "$1" + variableName;
-                int neg = int.Parse(m.Value);
+                variableName = variableName.Substring("parent:".Length);
                 int val = int.Parse(dataVariable.Substring(string.Format(Generator.DATA_VARIABLE_FORMAT,"").Length));
-                return CreateVariableString(string.Format(Generator.DATA_VARIABLE_FORMAT, val + neg), variableName);
+                return CreateVariableString(string.Format(Generator.DATA_VARIABLE_FORMAT, val -1), variableName);
             }
             else
             {
