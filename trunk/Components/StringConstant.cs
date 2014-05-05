@@ -42,7 +42,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
                 while (m.Value != "")
                 {
                     if (m.Value == "</pre>")
-                        sb.Append(_text.Substring(index, m.Index - index));
+                        sb.Append(_text.Substring(index, m.Index - index).Replace("\t", "\\t").Replace("\n", "\\n").Replace("\r", "\\r").Replace("'", "\\'"));
                     else
                         sb.Append(_text.Substring(index, m.Index - index).Replace("\t", "").Replace("\n", "").Replace("\r", "").Replace("'", "\\'"));
                     sb.Append(m.Value);

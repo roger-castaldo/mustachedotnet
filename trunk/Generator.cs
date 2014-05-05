@@ -9,6 +9,8 @@ namespace Org.Reddragonit.MustacheDotNet
 {
     public static class Generator
     {
+        internal const string DATA_VARIABLE_FORMAT = "data{0}";
+
         public static void GenerateCode(Stream source, Stream destination,bool compress)
         {
             StreamReader sr = new StreamReader(source);
@@ -22,7 +24,7 @@ namespace Org.Reddragonit.MustacheDotNet
             if (source == "")
                 return "";
             StringBuilder sb = new StringBuilder();
-            string var = "data1";
+            string var = string.Format(DATA_VARIABLE_FORMAT,1);
             Parser parser = new Parser(source);
             sb.AppendLine(string.Format("{1}function({0}){{var ret='';", var,(parser.MethodName==null ? "" : parser.MethodName+"=")));
             foreach (IComponent comp in parser.Parts)
