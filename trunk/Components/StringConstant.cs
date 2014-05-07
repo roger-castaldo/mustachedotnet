@@ -8,6 +8,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
     internal class StringConstant : IComponent
     {
         private static readonly Regex _regTag = new Regex("<[^>]+>", RegexOptions.Compiled | RegexOptions.ECMAScript);
+        private static readonly Regex _regSpaces = new Regex("\\s\\s+", RegexOptions.Compiled);
 
         private string _text;
         private bool _inPre;
@@ -44,7 +45,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
                     if (m.Value == "</pre>")
                         sb.Append(_text.Substring(index, m.Index - index).Replace("\t", "\\t").Replace("\n", "\\n").Replace("\r", "\\r").Replace("'", "\\'"));
                     else
-                        sb.Append(_text.Substring(index, m.Index - index).Replace("\t", "").Replace("\n", "").Replace("\r", "").Replace("'", "\\'"));
+                        sb.Append(_regSpaces.Replace(_text.Substring(index, m.Index - index).Replace("\t", "").Replace("\n", "").Replace("\r", "").Replace("'", "\\'")," "));
                     sb.Append(m.Value);
                     index = m.Length + m.Index;
                     if (m.Value.StartsWith("<pre"))
@@ -56,7 +57,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
                     m = _regTag.Match(_text, index);
                 }
                 if (index < _text.Length)
-                    sb.Append(_text.Substring(index).Replace("\t", "").Replace("\n", "").Replace("\r", "").Replace("'", "\\'"));
+                    sb.Append(_regSpaces.Replace(_text.Substring(index).Replace("\t", "").Replace("\n", "").Replace("\r", "").Replace("'", "\\'")," "));
                 return (sb.ToString().Trim() == "" ? "" : "ret+='" + sb.ToString() + "';");
             }
         }
