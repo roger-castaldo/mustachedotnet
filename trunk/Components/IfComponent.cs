@@ -58,25 +58,29 @@ namespace Org.Reddragonit.MustacheDotNet.Components
                 ret = ret.Substring(5);
                 ret = ret.Substring(0, ret.LastIndexOf("==undefined ? ''"));
                 ret = string.Format(
-@"if{0}){{
-{1}
+@"var tmp{3}={1});
+if ({0}(tmp{3}==undefined ? false : (tmp{3}==null ? false : tmp{3}))){{
+{2}
 }}",
+   new object[]{(_text[0] == '#' ? "" : "!"),
    ret,
-   subCode);
+   subCode,
+   num});
             }
             else
             {
                 foreach (IComponent comp in _children)
                     subCode += comp.ToJSCode(dataVariable + (num + 1).ToString());
                 ret += string.Format(
-    @"if ({0}({1}==undefined ? false : ({1}==null ? false : {1}))){{
-    if (Array.isArray({1})||({1}==undefined ? undefined : ({1}==null ? undefined : {1}.at))!=undefined){{
-        for(var x{2}=0;x{2}<{1}.length;x{2}++){{
-            {3}=({1}.at==undefined ? {1}[x{2}] : {1}.at(x{2}));
+    @"var tmp{2}={1};
+if ({0}(tmp{2}==undefined ? false : (tmp{2}==null ? false : tmp{2}))){{
+    if (Array.isArray(tmp{2})||(tmp{2}==undefined ? undefined : (tmp{2}==null ? undefined : tmp{2}.at))!=undefined){{
+        for(var x{2}=0;x{2}<tmp{2}.length;x{2}++){{
+            {3}=(tmp{2}.at==undefined ? tmp{2}[x{2}] : tmp{2}.at(x{2}));
             {4}
         }}
     }}else{{
-        {3}={1};
+        {3}=tmp{2};
         {4}
     }}
 }}", new object[]{
