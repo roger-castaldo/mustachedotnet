@@ -58,7 +58,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
                 ret = ret.Substring(5);
                 ret = ret.Substring(0, ret.LastIndexOf("==undefined ? ''"));
                 ret = string.Format(
-@"if({0}){{
+@"if{0}){{
 {1}
 }}",
    ret,
