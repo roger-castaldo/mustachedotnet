@@ -78,8 +78,11 @@ namespace Org.Reddragonit.MustacheDotNet
                                 break;
                         }
                         _curChars = _text[_curIndex-1].ToString();
-                        if (_text[_curIndex] == '}')
-                            _curIndex++;
+                        if (_curIndex < _text.Length)
+                        {
+                            if (_text[_curIndex] == '}')
+                                _curIndex++;
+                        }
                         break;
                     default:
                         _buf += _text[_curIndex];

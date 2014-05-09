@@ -54,11 +54,11 @@ namespace Org.Reddragonit.MustacheDotNet.Components
                 foreach (IComponent comp in _children)
                     subCode += comp.ToJSCode(dataVariable + num.ToString());
                 FunctionComponent fc = new FunctionComponent(_text.Substring(1));
-                ret = fc.ToJSCode(dataVariable);
+                ret = fc.ToJSCode(dataVariable + num.ToString());
                 ret = ret.Substring(5);
                 ret = ret.Substring(0, ret.LastIndexOf("==undefined ? ''"));
                 ret = string.Format(
-@"if{0}){{
+@"if({0}){{
 {1}
 }}",
    ret,
@@ -69,8 +69,8 @@ namespace Org.Reddragonit.MustacheDotNet.Components
                 foreach (IComponent comp in _children)
                     subCode += comp.ToJSCode(dataVariable + (num + 1).ToString());
                 ret += string.Format(
-    @"if ({0}{1}){{
-    if (Array.isArray({1})||({1}).at!=undefined){{
+    @"if ({0}({1}==undefined ? false : ({1}==null ? false : {1}))){{
+    if (Array.isArray({1})||({1}==undefined ? undefined : ({1}==null ? undefined : {1}.at))!=undefined){{
         for(var x{2}=0;x{2}<{1}.length;x{2}++){{
             {3}=({1}.at==undefined ? {1}[x{2}] : {1}.at(x{2}));
             {4}
