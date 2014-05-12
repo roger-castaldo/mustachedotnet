@@ -119,10 +119,14 @@ namespace Org.Reddragonit.MustacheDotNet
                 {
                     case '#':
                     case '^':
-                        IfComponent ifc = (IfComponent)comps[x];
-                        ifc.Children = _RecurMergeIfs(ifc.Text.Substring(1),x+1, comps);
-                        ret.Add(ifc);
-                        x += ifc.Length;
+                        if (comps[x].Text != "#else#")
+                        {
+                            IfComponent ifc = (IfComponent)comps[x];
+                            ifc.Children = _RecurMergeIfs(ifc.Text.Substring(1), x + 1, comps);
+                            ret.Add(ifc);
+                            x += ifc.Length;
+                        }else
+                            ret.Add(comps[x]);
                         break;
                     case '/':
                         if ((ifText == null ? "" : ifText) == comps[x].Text.Substring(1))
