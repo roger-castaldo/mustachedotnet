@@ -43,5 +43,51 @@ namespace Org.Reddragonit.MustacheDotNet
                 }
             }
         }
+
+        internal static List<string> ParseCommandArguements(string text)
+        {
+            string buf = "";
+            List<string> ret = new List<string>();
+            for (int x = 0; x < text.Length; x++)
+            {
+                switch (text[x])
+                {
+                    case ',':
+                        if (buf != "")
+                            ret.Add(buf);
+                        buf = "";
+                        break;
+                    case '\'':
+                    case '"':
+                        buf += _ProcessQuote(ref x,text, text[x]);
+                        break;
+                    default:
+                        buf += text[x];
+                        break;
+                }
+            }
+            if (buf != "")
+                ret.Add(buf);
+            return ret;
+        }
+
+        internal static string _ProcessQuote(ref int x,string text, char quote)
+        {
+            string ret = text[x].ToString();
+            x++;
+            while (text[x] != quote)
+            {
+                if (text[x]=='\\' && text[x+1]==quote)
+                {
+                    ret += "\\" + quote.ToString();
+                    x++;
+                }
+                else
+                    ret += text[x];
+                x++;
+            }
+            ret += text[x];
+            return ret;
+        }
     }
 }

@@ -11,6 +11,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
         public VariableComponent(string text)
         {
             _text = text;
+            _text = (_text.StartsWith("{") ? "& " + _text.Substring(1) : (_text.EndsWith("}") ? "& "+_text.Substring(0,_text.Length-1) : _text));
         }
 
         public string Text
@@ -87,8 +88,6 @@ namespace Org.Reddragonit.MustacheDotNet.Components
                 return ret;
             }else if (_text.StartsWith("& "))
                 return string.Format("ret+=({0}==undefined ? '' : {0}.toString());", Utility.CreateVariableString(dataVariable, _text.Substring(2)));
-            else if (_text.EndsWith("}"))
-                return string.Format("ret+=({0}==undefined ? '' : {0}.toString());", Utility.CreateVariableString(dataVariable, _text));
             else 
                 return string.Format(@"var pre = document.createElement('pre');
     var text=document.createTextNode(({0}==undefined ? '' : {0}.toString()));

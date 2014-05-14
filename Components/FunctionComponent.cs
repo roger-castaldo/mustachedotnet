@@ -20,28 +20,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
         public string ToJSCode(string dataVariable)
         {
             StringBuilder sb = new StringBuilder();
-            string buf = "";
-            List<string> tmp = new List<string>();
-            for (int x = 1; x < _text.Length; x++)
-            {
-                switch (_text[x])
-                {
-                    case ',':
-                        if (buf != "")
-                            tmp.Add(buf);
-                        buf = "";
-                        break;
-                    case '\'':
-                    case '"':
-                        buf += _ProcessQuote(ref x,_text[x]);
-                        break;
-                    default:
-                        buf += _text[x];
-                        break;
-                }
-            }
-            if (buf != "")
-                tmp.Add(buf);
+            List<string> tmp = Utility.ParseCommandArguements(_text.Substring(1));
             sb.Append(tmp[0]+"("+(tmp[0]=="eval" ? "[" : ""));
             for (int x = 1; x < tmp.Count; x++)
             {
@@ -111,19 +90,6 @@ namespace Org.Reddragonit.MustacheDotNet.Components
             }
             if (buffer.Trim().Length > 0)
                 ret.Add(buffer.Trim());
-            return ret;
-        }
-
-        private string _ProcessQuote(ref int x,char quote)
-        {
-            string ret = _text[x].ToString();
-            x++;
-            while (_text[x]!=quote)
-            {
-                ret += _text[x];
-                x++;
-            }
-            ret += _text[x];
             return ret;
         }
     }
