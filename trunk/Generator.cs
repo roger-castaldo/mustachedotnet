@@ -15,7 +15,9 @@ namespace Org.Reddragonit.MustacheDotNet
         {
             StreamReader sr = new StreamReader(source);
             StreamWriter sw = new StreamWriter(destination);
-            sw.Write(GenerateCode(sr.ReadToEnd(),compress));
+            string content = sr.ReadToEnd();
+            sr.Close();
+            sw.Write(GenerateCode(content,compress));
             sw.Flush();
         }
 

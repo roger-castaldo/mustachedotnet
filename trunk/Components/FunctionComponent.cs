@@ -42,7 +42,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
             }
             if (buf != "")
                 tmp.Add(buf);
-            sb.Append(tmp[0]+"(");
+            sb.Append(tmp[0]+"("+(tmp[0]=="eval" ? "[" : ""));
             for (int x = 1; x < tmp.Count; x++)
             {
                 switch(tmp[x][0]){
@@ -72,11 +72,11 @@ namespace Org.Reddragonit.MustacheDotNet.Components
                         sb.Append((x + 1 == tmp.Count ? "" : ","));
                         break;
                     default:
-                        sb.Append(Utility.CreateVariableString(dataVariable,tmp[x])+(x+1==tmp.Count ? "" : ","));
+                        sb.Append(Utility.CreateVariableString(dataVariable, tmp[x]) + (x + 1 == tmp.Count ? "" : ","));
                         break;
                 }
             }
-            sb.AppendLine(")");
+            sb.Append((tmp[0]=="eval" ? "].join('')" : "")+")");
             return string.Format("ret+=({0}==undefined ? '' : {0}.toString());", sb);
         }
 
