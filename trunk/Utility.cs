@@ -7,6 +7,7 @@ namespace Org.Reddragonit.MustacheDotNet
 {
     internal static class Utility
     {
+        private static readonly Regex _RegNum = new Regex("\\d+", RegexOptions.Compiled | RegexOptions.ECMAScript);
         
         public static string CreateVariableString(string dataVariable, string variableName)
         {
@@ -21,12 +22,14 @@ namespace Org.Reddragonit.MustacheDotNet
                     return dataVariable;
             }
             else if (variableName.StartsWith("global:"))
-                return CreateVariableString(string.Format(Generator.DATA_VARIABLE_FORMAT, 1),variableName.Substring("global:".Length));
+                return CreateVariableString(string.Format(Generator.DATA_VARIABLE_FORMAT, 1), variableName.Substring("global:".Length));
+            else if (variableName == "$index")
+                return "x" + (int.Parse(_RegNum.Match(dataVariable).Value)-1).ToString();
             else if (variableName.StartsWith("parent:"))
             {
                 variableName = variableName.Substring("parent:".Length);
-                int val = int.Parse(dataVariable.Substring(string.Format(Generator.DATA_VARIABLE_FORMAT,"").Length));
-                return CreateVariableString(string.Format(Generator.DATA_VARIABLE_FORMAT, val -1), variableName);
+                int val = int.Parse(dataVariable.Substring(string.Format(Generator.DATA_VARIABLE_FORMAT, "").Length));
+                return CreateVariableString(string.Format(Generator.DATA_VARIABLE_FORMAT, val - 1), variableName);
             }
             else
             {
