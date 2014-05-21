@@ -82,6 +82,14 @@ namespace Org.Reddragonit.MustacheDotNet.Components
                         ret.Add(buffer);
                         buffer = "";
                         break;
+                    case '+':
+                        if (buffer.Trim().Length > 0)
+                        {
+                            ret.Add(buffer.Trim());
+                            buffer = "";
+                        }
+                        buffer += variable[x];
+                        break;
                     default:
                         buffer+=variable[x];
                         break;
