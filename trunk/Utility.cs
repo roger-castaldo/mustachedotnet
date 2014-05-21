@@ -10,6 +10,7 @@ namespace Org.Reddragonit.MustacheDotNet
         
         public static string CreateVariableString(string dataVariable, string variableName)
         {
+            variableName = variableName.Trim();
             if (variableName == "")
                 return dataVariable;
             else if (variableName.StartsWith("$1"))
