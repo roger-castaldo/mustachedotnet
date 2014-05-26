@@ -58,7 +58,7 @@ namespace Org.Reddragonit.MustacheDotNet
                 {
                     case ',':
                         if (buf != "")
-                            ret.Add(buf);
+                            ret.Add(buf.Trim());
                         buf = "";
                         break;
                     case '\'':
@@ -71,7 +71,7 @@ namespace Org.Reddragonit.MustacheDotNet
                 }
             }
             if (buf != "")
-                ret.Add(buf);
+                ret.Add(buf.Trim());
             return ret;
         }
 
