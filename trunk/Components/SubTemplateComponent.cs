@@ -25,7 +25,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
                 List<string> tmp = Utility.ParseCommandArguements(_text.Substring(1));
                 sb.AppendFormat("ret+={0}(", tmp[0]);
                 if (tmp.Count == 2)
-                    sb.Append(Utility.CreateVariableString(dataVariable, (tmp[1].StartsWith("\"") || tmp[1].StartsWith("'") ? tmp[1] : Utility.CreateVariableString(dataVariable, tmp[1]))));
+                    sb.Append(tmp[1].StartsWith("\"") || tmp[1].StartsWith("'") ? tmp[1] : Utility.CreateVariableString(dataVariable, tmp[1]));
                 else
                 {
                     sb.Append("{");
