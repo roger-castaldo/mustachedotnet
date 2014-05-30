@@ -62,7 +62,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
                     if (subVar != "")
                         ret += string.Format(@"else if (Array.isArray({0})){{
     for(var i=0;i<{0}.length;i++){{
-        ret+=this.pref({0}[i]==undefined ? undefined : ({0}[i].{1}!=undefined ? {0}[i].{1} : ({0}[i].get != undefined ? {0}[i].get('{1}') : undefined)))+(i+1<{0}.length ? '{2}' : ''));
+        ret+=this.pref(({0}[i]==undefined ? undefined : ({0}[i].{1}!=undefined ? {0}[i].{1} : ({0}[i].get != undefined ? {0}[i].get('{1}') : undefined)))+(i+1<{0}.length ? '{2}' : ''));
     }}
 }}else if ({0}.at!=undefined){{
     for(var i=0;i<{0}.length;i++){{
