@@ -29,6 +29,10 @@ namespace Org.Reddragonit.MustacheDotNet
             string var = string.Format(DATA_VARIABLE_FORMAT,1);
             Parser parser = new Parser(source);
             sb.AppendLine(string.Format("{1}function({0}){{var ret='';", var,(parser.MethodName==null ? "" : parser.MethodName+"=")));
+            sb.AppendLine(@"var pref=function(txt){var pre = document.createElement('pre');
+    var text=document.createTextNode(txt);
+    pre.appendChild(text);
+    return pre.innerHTML;}");
             foreach (IComponent comp in parser.Parts)
                 sb.AppendLine(comp.ToJSCode(var));
             sb.AppendLine("return ret;}");
