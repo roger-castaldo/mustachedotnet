@@ -91,11 +91,11 @@ if ({0}(tmp{3}==undefined ? false : (tmp{3}==null ? false : tmp{3}))){{
 if ({0}(tmp{2}==undefined ? false : (tmp{2}==null ? false : tmp{2}))){{
     if (Array.isArray(tmp{2})||(tmp{2}==undefined ? undefined : (tmp{2}==null ? undefined : tmp{2}.at))!=undefined){{
         for(var x{2}=0;x{2}<tmp{2}.length;x{2}++){{
-            {3}=(tmp{2}.at==undefined ? tmp{2}[x{2}] : tmp{2}.at(x{2}));
+            var {3}=(tmp{2}.at==undefined ? tmp{2}[x{2}] : tmp{2}.at(x{2}));
             {4}
         }}
     }}else{{
-        {3}=tmp{2};
+        var {3}=tmp{2};
         {4}
     }}
 }}", new object[]{
@@ -111,11 +111,11 @@ if ({0}(tmp{2}==undefined ? false : (tmp{2}==null ? false : tmp{2}))){{
     @"else{{
     if (Array.isArray(tmp{2})||(tmp{2}==undefined ? undefined : (tmp{2}==null ? undefined : tmp{2}.at))!=undefined){{
         for(var x{2}=0;x{2}<tmp{2}.length;x{2}++){{
-            {3}=(tmp{2}.at==undefined ? tmp{2}[x{2}] : tmp{2}.at(x{2}));
+            var {3}=(tmp{2}.at==undefined ? tmp{2}[x{2}] : tmp{2}.at(x{2}));
             {4}
         }}
     }}else{{
-        {3}=tmp{2};
+        var {3}=tmp{2};
         {4}
     }}
 }}", new object[]{
