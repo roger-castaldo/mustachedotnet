@@ -129,8 +129,10 @@ namespace Org.Reddragonit.MustacheDotNet
                             ret.Add(comps[x]);
                         break;
                     case '/':
-                        if ((ifText == null ? "" : ifText) == comps[x].Text.Substring(1))
-                            return ret;
+                            if ((ifText == null ? "" : ifText) == comps[x].Text.Substring(1))
+                                return ret;
+                            else
+                                ret.Add(comps[x]);
                         break;
                     default:
                         ret.Add(comps[x]);
