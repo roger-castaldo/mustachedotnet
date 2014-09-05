@@ -46,7 +46,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
                         sb.Append(_text.Substring(index, m.Index - index).Replace("\t", "\\t").Replace("\n", "\\n").Replace("\r", "\\r").Replace("'", "\\'"));
                     else
                         sb.Append(_regSpaces.Replace(_text.Substring(index, m.Index - index).Replace("\t", "").Replace("\n", "").Replace("\r", "").Replace("'", "\\'")," "));
-                    sb.Append(m.Value);
+                    sb.Append(m.Value.Replace("\t", "\\t").Replace("\n", "\\n").Replace("\r", "\\r").Replace("'", "\\'"));
                     index = m.Length + m.Index;
                     if (m.Value.StartsWith("<pre"))
                     {
