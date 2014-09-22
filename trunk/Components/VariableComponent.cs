@@ -31,20 +31,13 @@ namespace Org.Reddragonit.MustacheDotNet.Components
                 string ret = "";
                 if (_text.StartsWith("& ") || _text.EndsWith("}"))
                 {
-                    ret = string.Format(@"if (Array.isArray({0})){{
+                    ret = string.Format(@"if ({0}.isArray){{
     ret+={0}.join('{1}');
 }}", new object[] { var, repeater });
                     if (subVar != "")
-                        ret += string.Format(@"else if (Array.isArray({0})){{
+                        ret += string.Format(@"else if ({0}.isArray){{
     for(var i=0;i<{0}.length;i++){{
-        ret+=({0}[i]==undefined ? undefined : ({0}[i].{1}!=undefined ? {0}[i].{1} : ({0}[i].get != undefined ? {0}[i].get('{1}') : undefined)));
-        if (i+1<{0}.length){{
-            ret+='{2}';
-        }}
-    }}
-}}else if ({0}.at!=undefined){{
-    for(var i=0;i<{0}.length;i++){{
-        ret+=({0}.at(i)==undefined ? undefined : ({0}.at(i).{1}!=undefined ? {0}.at(i).{1} : ({0}.at(i).get != undefined ? {0}.at(i).get('{1}') : undefined)));
+        ret+=({0}.get(i)==undefined ? undefined : ({0}.get(i).get('{1}')!=undefined ? {0}.get(i]).get('{1}') : undefined));
         if (i+1<{0}.length){{
             ret+='{2}';
         }}
@@ -56,17 +49,13 @@ namespace Org.Reddragonit.MustacheDotNet.Components
                 }
                 else
                 {
-                    ret = string.Format(@"if (Array.isArray({0})){{
-    ret+=this.pref(({0}==undefined ? '' : {0}.join('{1}')));
+                    ret = string.Format(@"if ({0}.isArray){{
+    ret+=this.pref({0}.join('{1}'));
 }}", new object[] { var, repeater });
                     if (subVar != "")
-                        ret += string.Format(@"else if (Array.isArray({0})){{
+                        ret += string.Format(@"else if ({0}.isArray){{
     for(var i=0;i<{0}.length;i++){{
-        ret+=this.pref(({0}[i]==undefined ? undefined : ({0}[i].{1}!=undefined ? {0}[i].{1} : ({0}[i].get != undefined ? {0}[i].get('{1}') : undefined)))+(i+1<{0}.length ? '{2}' : ''));
-    }}
-}}else if ({0}.at!=undefined){{
-    for(var i=0;i<{0}.length;i++){{
-        ret+=this.pref(({0}.at(i)==undefined ? undefined : ({0}.at(i).{1}!=undefined ? {0}.at(i).{1} : ({0}.at(i).get != undefined ? {0}.at(i).get('{1}') : undefined)))+(i+1<{0}.length ? '{2}' : ''));
+        ret+=this.pref(({0}.get(i)==undefined ? undefined : {0}.get(i).get('{1}')!=undefined)+(i+1<{0}.length ? '{2}' : ''));
     }}
 }}", new object[] { subVar, subVarField, repeater });
                     ret += string.Format(@"else{{

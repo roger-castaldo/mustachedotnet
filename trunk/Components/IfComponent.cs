@@ -88,10 +88,10 @@ if ({0}(tmp{3}==undefined ? false : (tmp{3}==null ? false : tmp{3}))){{
             {
                 ret = string.Format(
     @"var tmp{2}={1};
-if ({0}(tmp{2}==undefined ? false : (tmp{2}==null ? false : tmp{2}))){{
-    if (Array.isArray(tmp{2})||(tmp{2}==undefined ? undefined : (tmp{2}==null ? undefined : tmp{2}.at))!=undefined){{
+if ({0}(tmp{2}==undefined ? false : (tmp{2}==null ? false : (tmp{2}.isArray ? tmp{2}.length>0 : tmp{2})))){{
+    if (tmp{2}.isArray){{
         for(var x{2}=0;x{2}<tmp{2}.length;x{2}++){{
-            var {3}=(tmp{2}.at==undefined ? tmp{2}[x{2}] : tmp{2}.at(x{2}));
+            var {3}=tmp{2}.get(x{2});
             {4}
         }}
     }}else{{
@@ -109,9 +109,9 @@ if ({0}(tmp{2}==undefined ? false : (tmp{2}==null ? false : tmp{2}))){{
                 {
                     ret += string.Format(
     @"else{{
-    if (Array.isArray(tmp{2})||(tmp{2}==undefined ? undefined : (tmp{2}==null ? undefined : tmp{2}.at))!=undefined){{
+    if ((tmp{2}!=undefined&&tmp{2}!=null ? tmp{2}.isArray : false)){{
         for(var x{2}=0;x{2}<tmp{2}.length;x{2}++){{
-            var {3}=(tmp{2}.at==undefined ? tmp{2}[x{2}] : tmp{2}.at(x{2}));
+            var {3}=tmp{2}.get(x{2});
             {4}
         }}
     }}else{{

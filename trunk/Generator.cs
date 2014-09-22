@@ -34,7 +34,51 @@ namespace Org.Reddragonit.MustacheDotNet
     var text=document.createTextNode(txt);
     pre.appendChild(text);
     return pre.innerHTML;}
+}
+if (this.cObj==undefined){
+    this.cObj=function(obj){
+        if (obj==undefined){
+            return undefined;
+        }else if (obj==null){
+            return null;
+        }else if(obj.cObj!=undefined){
+            return obj;   
+        }else{
+            return {
+                isArray:Array.isArray(obj)||obj.at!=undefined,
+                length:obj.length,
+                cObj:arguments.callee,
+                _obj:obj,
+                join:function(char){
+                    if (this.isArray){
+                        if (Array.isArray(this._obj)){
+                            return this._obj.join(char);
+                        }else{
+                            var tmp = new Array();
+                            for(var x=0;x<this._obj.length;x++){ tmp.push(this._obj.at(x));}
+                            return tmp.join(char);
+                        }
+                    }
+                },
+                get:function(prop){
+                    var ret = undefined;
+                    if (this.isArray){
+                        ret = (this._obj.at!=undefined ? this._obj.at(prop) : this._obj[prop]);
+                    }else{
+                        if (prop.indexOf('.')>0){
+                            var tmp = this.get(prop.substring(0,prop.indexOf('.')));
+                            ret =  (tmp==undefined ? undefined : tmp.get(prop.substring(prop.indexOf('.')+1)));
+                        }else{
+                            ret = (this._obj[prop]!=undefined ? this._obj[prop] : (this._obj.get!=undefined ? this._obj.get(prop) : undefined));
+                        }
+                    }
+                    return (ret==undefined ? undefined : (ret==null ? null : (Array.isArray(ret)||ret.toString()=='[object Object]' ? this.cObj(ret) : ret)));
+                }
+            };   
+        }
+    }
 }");
+            sb.AppendLine(string.Format("{0}=this.cObj({0});", var));
             foreach (IComponent comp in parser.Parts)
                 sb.AppendLine(comp.ToJSCode(var));
             sb.AppendLine("return ret;}");

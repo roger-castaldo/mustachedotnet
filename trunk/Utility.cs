@@ -33,18 +33,9 @@ namespace Org.Reddragonit.MustacheDotNet
             }
             else
             {
-                if (variableName.Contains("."))
-                {
-                    return CreateVariableString(string.Format("({0}==undefined ? undefined : ({0}.{1}!=undefined ? {0}.{1} : ({0}.get != undefined ? {0}.get('{1}') : undefined)))",
-                        dataVariable,
-                        variableName.Substring(0, variableName.IndexOf("."))), variableName.Substring(variableName.IndexOf(".") + 1));
-                }
-                else
-                {
-                    return string.Format("({0}==undefined ? undefined : ({0}.{1}!=undefined ? {0}.{1} : ({0}.get != undefined ? {0}.get('{1}') : undefined)))",
+                return string.Format("({0}==undefined ? undefined : {0}.get('{1}'))",
                         dataVariable,
                         variableName);
-                }
             }
         }
 
