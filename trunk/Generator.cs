@@ -73,6 +73,9 @@ if (this.cObj==undefined){
                         }
                     }
                     return (ret==undefined ? undefined : (ret==null ? null : (Array.isArray(ret)||ret.toString()=='[object Object]' ? this.cObj(ret) : ret)));
+                },
+                toString:function(){
+                    return this._obj.toString();
                 }
             };   
         }
