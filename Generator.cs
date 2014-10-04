@@ -67,7 +67,7 @@ if (this.cObj==undefined){
                     }else{
                         if (prop.indexOf('.')>0){
                             var tmp = this.get(prop.substring(0,prop.indexOf('.')));
-                            ret =  (tmp==undefined ? undefined : tmp.get(prop.substring(prop.indexOf('.')+1)));
+                            ret =  (tmp==undefined ? undefined : (tmp.get==undefined ? tmp[prop.substring(prop.indexOf('.')+1)] : tmp.get(prop.substring(prop.indexOf('.')+1))));
                         }else{
                             ret = (this._obj[prop]!=undefined ? this._obj[prop] : (this._obj.get!=undefined ? this._obj.get(prop) : undefined));
                         }
