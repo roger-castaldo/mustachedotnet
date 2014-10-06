@@ -21,7 +21,12 @@ namespace Org.Reddragonit.MustacheDotNet.Components
         {
             StringBuilder sb = new StringBuilder();
             List<string> tmp = Utility.ParseCommandArguements(_text.Substring(1));
-            sb.Append(tmp[0]+"("+(tmp[0]=="eval" ? "[" : ""));
+            if (tmp[0].StartsWith("$"))
+                sb.AppendFormat("({0}==undefined ? undefined : {0}.{1}(",
+                    Utility.CreateVariableString(dataVariable, tmp[0].Substring(1, tmp[0].LastIndexOf(".") - 1)),
+                    tmp[0].Substring(tmp[0].LastIndexOf(".") + 1));
+            else
+                sb.Append(tmp[0]+"("+(tmp[0]=="eval" ? "[" : ""));
             for (int x = 1; x < tmp.Count; x++)
             {
                 switch(tmp[x][0]){
@@ -55,7 +60,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
                         break;
                 }
             }
-            sb.Append((tmp[0]=="eval" ? "].join('')" : "")+")");
+            sb.Append((tmp[0]=="eval" ? "].join('')" : "")+(tmp[0].StartsWith("$") ? ")" : "")+")");
             return string.Format("ret+=({0}==undefined ? '' : {0}.toString());", sb);
         }
 
