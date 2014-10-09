@@ -23,7 +23,7 @@ namespace Org.Reddragonit.MustacheDotNet
 
         public static string GenerateCode(string source,bool compress)
         {
-            if (source == "")
+            if ((source==null ? "" : source) == "")
                 return "";
             StringBuilder sb = new StringBuilder();
             string var = string.Format(DATA_VARIABLE_FORMAT,1);
