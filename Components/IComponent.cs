@@ -7,6 +7,6 @@ namespace Org.Reddragonit.MustacheDotNet.Components
     internal interface IComponent
     {
         string Text { get; }
-        string ToJSCode(string dataVariable);
+        string ToJSCode(string dataVariable,bool compress);
     }
 }

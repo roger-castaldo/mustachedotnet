@@ -11,25 +11,8 @@ namespace Org.Reddragonit.MustacheDotNet
     {
         internal const string DATA_VARIABLE_FORMAT = "data{0}";
 
-        public static void GenerateCode(Stream source, Stream destination,bool compress)
-        {
-            StreamReader sr = new StreamReader(source);
-            StreamWriter sw = new StreamWriter(destination);
-            string content = sr.ReadToEnd();
-            sr.Close();
-            sw.Write(GenerateCode(content,compress));
-            sw.Flush();
-        }
-
-        public static string GenerateCode(string source,bool compress)
-        {
-            if ((source==null ? "" : source) == "")
-                return "";
-            StringBuilder sb = new StringBuilder();
-            string var = string.Format(DATA_VARIABLE_FORMAT,1);
-            Parser parser = new Parser(source);
-            sb.AppendLine(string.Format("{1}function({0}){{var ret='';", var,(parser.MethodName==null ? "" : parser.MethodName+"=")));
-            sb.AppendLine(@"if (this.pref==undefined){
+        private const string _FUNCTION_LINE = "{1}function({0}){{var ret='';";
+        private const string _START_CODE = @"if (this.pref==undefined){
     this.pref=function(txt){var pre = document.createElement('pre');
     var text=document.createTextNode(txt);
     pre.appendChild(text);
@@ -80,12 +63,33 @@ if (this.cObj==undefined){
             };   
         }
     }
-}");
+}";
+        private static readonly string _START_CODE_MIN = JSMinifier.Minify(_START_CODE);
+
+        public static void GenerateCode(Stream source, Stream destination,bool compress)
+        {
+            StreamReader sr = new StreamReader(source);
+            StreamWriter sw = new StreamWriter(destination);
+            string content = sr.ReadToEnd();
+            sr.Close();
+            sw.Write(GenerateCode(content,compress));
+            sw.Flush();
+        }
+
+        public static string GenerateCode(string source,bool compress)
+        {
+            if ((source==null ? "" : source) == "")
+                return "";
+            StringBuilder sb = new StringBuilder();
+            string var = string.Format(DATA_VARIABLE_FORMAT,1);
+            Parser parser = new Parser(source);
+            sb.AppendLine(string.Format(_FUNCTION_LINE, var,(parser.MethodName==null ? "" : parser.MethodName+"=")));
+            sb.AppendLine((compress ? _START_CODE_MIN : _START_CODE));
             sb.AppendLine(string.Format("{0}=this.cObj({0});", var));
             foreach (IComponent comp in parser.Parts)
-                sb.AppendLine(comp.ToJSCode(var));
+                sb.AppendLine(comp.ToJSCode(var,compress));
             sb.AppendLine("return ret;}");
-            return (compress ? JSMinifier.Minify(sb.ToString()) : sb.ToString());
+            return sb.ToString();
         }
     }
 }

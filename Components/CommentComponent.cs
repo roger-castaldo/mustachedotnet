@@ -17,11 +17,11 @@ namespace Org.Reddragonit.MustacheDotNet.Components
             get { return _text; }
         }
 
-        public string ToJSCode(string dataVariable)
+        public string ToJSCode(string dataVariable,bool compress)
         {
-            return (Text.Contains("\n") ?
+            return (compress ? "" : (Text.Contains("\n") ?
                 "/*" + _text.Replace("*/", "* /") + "*/" :
-                "//" + _text);
+                "//" + _text));
         }
     }
 }

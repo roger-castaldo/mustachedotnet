@@ -17,7 +17,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
             get { return _text; }
         }
 
-        public string ToJSCode(string dataVariable)
+        public string ToJSCode(string dataVariable,bool compress)
         {
             if (_text.Contains(","))
             {
