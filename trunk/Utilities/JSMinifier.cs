@@ -34,9 +34,8 @@ namespace Org.Reddragonit.MustacheDotNet.Utilities
                         emptyLines.AppendLine(s.Trim());
                 }
 
-                string ret = CSSMinifier.StripComments(emptyLines.ToString());
                 Stream outMS = new MemoryStream();
-                Stream inMS = new MemoryStream(ASCIIEncoding.ASCII.GetBytes(ret));
+                Stream inMS = new MemoryStream(ASCIIEncoding.ASCII.GetBytes(emptyLines.ToString()));
                 new JSMinifier().Minify(ref inMS, ref outMS);
                 return ASCIIEncoding.ASCII.GetString(((MemoryStream)outMS).ToArray()); ;
             }
