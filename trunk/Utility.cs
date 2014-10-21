@@ -84,5 +84,13 @@ namespace Org.Reddragonit.MustacheDotNet
             ret += text[x];
             return ret;
         }
+
+        internal static string Format(string format, object[] data)
+        {
+            format = format.Replace("{", "{{").Replace("}", "}}");
+            for (int x = 0; x < data.Length; x++)
+                format = format.Replace("$" + x.ToString(), "{" + x.ToString() + "}");
+            return string.Format(format, data);
+        }
     }
 }

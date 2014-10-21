@@ -17,7 +17,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
             get { return _text; }
         }
 
-        public string ToJSCode(string dataVariable)
+        public string ToJSCode(string dataVariable,bool compress)
         {
             StringBuilder sb = new StringBuilder();
             List<string> tmp = Utility.ParseCommandArguements(_text.Substring(1));
