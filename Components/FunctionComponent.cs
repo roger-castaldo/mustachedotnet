@@ -19,7 +19,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
 
         public string ToJSCode(string dataVariable,bool compress)
         {
-            StringBuilder sb = new StringBuilder();
+            WrappedStringBuilder sb = new WrappedStringBuilder(compress);
             List<string> tmp = Utility.ParseCommandArguements(_text.Substring(1));
             if (tmp[0].StartsWith("$"))
                 sb.AppendFormat("({0}==undefined ? undefined : {0}.{1}(",

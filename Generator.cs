@@ -80,7 +80,7 @@ if (this.cObj==undefined){
         {
             if ((source==null ? "" : source) == "")
                 return "";
-            StringBuilder sb = new StringBuilder();
+            WrappedStringBuilder sb = new WrappedStringBuilder(compress);
             string var = string.Format(DATA_VARIABLE_FORMAT,1);
             Parser parser = new Parser(source);
             sb.AppendLine(string.Format(_FUNCTION_LINE, var,(parser.MethodName==null ? "" : parser.MethodName+"=")));
