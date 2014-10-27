@@ -22,7 +22,7 @@ $2
 }}$4",
           @"var tmp$2=$1;
     if ($0(tmp$2==undefined ? false : (tmp$2==null ? false : (tmp$2.isArray ? tmp$2.length>0 : tmp$2)))){{
-        if (tmp$2.isArray){{
+        if ((tmp$2!=undefined&&tmp$2!=null ? tmp$2.isArray : false)){{
             for(var x$2=0;x$2<tmp$2.length;x$2++){{
                 var $3=tmp$2.get(x$2);
                 $4
