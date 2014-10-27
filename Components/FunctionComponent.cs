@@ -61,7 +61,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
                 }
             }
             sb.Append((tmp[0]=="eval" ? "].join('')" : "")+(tmp[0].StartsWith("$") ? ")" : "")+")");
-            return string.Format("ret+=({0}==undefined ? '' : {0}.toString());", sb);
+            return string.Format("ret+=({0}==undefined ? '' : {0}.toString());", sb.ToString());
         }
 
         private List<string> _SplitVariable(string variable)
