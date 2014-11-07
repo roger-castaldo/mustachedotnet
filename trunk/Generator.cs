@@ -46,7 +46,7 @@ if (this.cObj==undefined){
                 get:function(prop){
                     var ret = undefined;
                     if (this.isArray){
-                        ret = (this._obj.at!=undefined ? this._obj.at(prop) : this._obj[prop]);
+                        ret = (this._obj.at!=undefined ? (this._obj.at(prop)==undefined ? (this._obj[prop]!=undefined ? this._obj[prop] : (this._obj.get!=undefined ? this._obj.get(prop) : undefined)) : this._obj.at(prop)) : this._obj[prop]);
                     }else{
                         if (prop.indexOf('.')>0){
                             var tmp = this.get(prop.substring(0,prop.indexOf('.')));
