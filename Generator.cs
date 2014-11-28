@@ -47,6 +47,12 @@ if (this.cObj==undefined){
                     var ret = undefined;
                     if (this.isArray){
                         ret = (this._obj.at!=undefined ? (this._obj.at(prop)==undefined ? (this._obj[prop]!=undefined ? this._obj[prop] : (this._obj.get!=undefined ? this._obj.get(prop) : undefined)) : this._obj.at(prop)) : this._obj[prop]);
+                        if (ret==undefined){
+                            ret = new Array();
+                            for(var x=0;x<this.length;x++){
+                                ret.push((this.get(x).get==undefined ? this.get(x) : this.get(x).get(prop)));
+                            }
+                        }
                     }else{
                         if (prop.indexOf('.')>0){
                             var tmp = this.get(prop.substring(0,prop.indexOf('.')));
