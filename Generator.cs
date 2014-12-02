@@ -49,15 +49,13 @@ if (this.cObj==undefined){
                         ret = this.length;
                     }else{
                         if (this.isArray){
-                            if (prop.toString().indexOf('.')>0){
-                                if (ret==undefined){
-                                    ret = new Array();
-                                    for(var x=0;x<this.length;x++){
-                                        ret.push((this.get(x).get==undefined ? this.get(x) : this.get(x).get(prop)));
-                                    }
+                            ret = (this._obj.at!=undefined ? (this._obj.at(prop)==undefined ? (this._obj[prop]!=undefined ? this._obj[prop] : (this._obj.get!=undefined ? this._obj.get(prop) : undefined)) : this._obj.at(prop)) : this._obj[prop]);
+                            if (ret==undefined && typeof prop == 'string' && !this._obj.hasOwnProperty(prop)){
+                                ret = new Array();
+                                for(var x=0;x<this.length;x++){
+                                    ret.push((this.get(x).get==undefined ? this.get(x) : this.get(x).get(prop)));
                                 }
-                            }else{
-                                ret = (this._obj.at!=undefined ? (this._obj.at(prop)==undefined ? (this._obj[prop]!=undefined ? this._obj[prop] : (this._obj.get!=undefined ? this._obj.get(prop) : undefined)) : this._obj.at(prop)) : this._obj[prop]);
+                                ret = (ret.length>0 && ret[0]==undefined ? undefined : (ret.length> 0 ? ret : undefined));
                             }
                         }else{
                             if (prop.indexOf('.')>0){
