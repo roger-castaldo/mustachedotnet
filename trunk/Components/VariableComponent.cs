@@ -15,10 +15,10 @@ namespace Org.Reddragonit.MustacheDotNet.Components
         static VariableComponent()
         {
             _CODE_LINES = new string[]{
-            @"if ($0.isArray){{
+            @"if (($0==undefined ? false : $0.isArray)){{
         ret+=$0.join('$1');
     }}",
-       @"else if ($0.isArray){{
+       @"else if (($0==undefined ? false : $0.isArray)){{
         for(var i=0;i<$0.length;i++){{
             ret+=($0.get(i)==undefined ? undefined : ($0.get(i).get('$1')!=undefined ? $0.get(i]).get('$1') : undefined));
             if (i+1<$0.length){{
@@ -29,10 +29,10 @@ namespace Org.Reddragonit.MustacheDotNet.Components
        @"else{{
         ret+=($0==undefined ? '' : ($0==null ? '' : $0.toString()+'$1'));
     }}",
-       @"if ($0.isArray){{
+       @"if (($0==undefined ? false : $0.isArray)){{
         ret+=this.pref($0.join('$1'));
     }}",
-       @"else if ($0.isArray){{
+       @"else if (($0==undefined ? false : $0.isArray)){{
         for(var i=0;i<$0.length;i++){{
             ret+=this.pref(($0.get(i)==undefined ? undefined : $0.get(i).get('$1')!=undefined)+(i+1<$0.length ? '$2' : ''));
         }}
