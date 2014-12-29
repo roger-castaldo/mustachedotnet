@@ -43,6 +43,7 @@
     <Compile Include="Components\SubTemplateComponent.cs" />
     <Compile Include="Components\VariableComponent.cs" />
     <Compile Include="Generator.cs" />
+    <Compile Include="Method.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Utilities\JSMinifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

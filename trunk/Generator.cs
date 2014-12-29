@@ -77,6 +77,34 @@ if (this.cObj==undefined){
 }";
         private static readonly string _START_CODE_MIN = JSMinifier.Minify(_START_CODE);
 
+        public static void GenerateCode(Stream[] sources, Stream destination, bool compress)
+        {
+            StreamWriter sw = new StreamWriter(destination);
+            List<string> tmp = new List<string>();
+            foreach (Stream str in sources)
+            {
+                StreamReader sr = new StreamReader(str);
+                tmp.Add(sr.ReadToEnd());
+                sr.Close();
+            }
+            sw.Write(GenerateCode(tmp, compress));
+            sw.Flush();
+        }
+
+        public static void GenerateCode(List<Stream> sources, Stream destination, bool compress)
+        {
+            StreamWriter sw = new StreamWriter(destination);
+            List<string> tmp = new List<string>();
+            foreach (Stream str in sources)
+            {
+                StreamReader sr = new StreamReader(str);
+                tmp.Add(sr.ReadToEnd());
+                sr.Close();
+            }
+            sw.Write(GenerateCode(tmp, compress));
+            sw.Flush();
+        }
+
         public static void GenerateCode(Stream source, Stream destination,bool compress)
         {
             StreamReader sr = new StreamReader(source);
@@ -87,19 +115,42 @@ if (this.cObj==undefined){
             sw.Flush();
         }
 
+        public static string GenerateCode(string[] sources, bool compress)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (string str in sources)
+            {
+                sb.AppendLine(GenerateCode(str, compress));
+            }
+            return sb.ToString();
+        }
+
+        public static string GenerateCode(List<string> sources, bool compress)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (string str in sources)
+            {
+                sb.AppendLine(GenerateCode(str, compress));
+            }
+            return sb.ToString();
+        }
+
         public static string GenerateCode(string source,bool compress)
         {
             if ((source==null ? "" : source) == "")
                 return "";
             WrappedStringBuilder sb = new WrappedStringBuilder(compress);
-            string var = string.Format(DATA_VARIABLE_FORMAT,1);
             Parser parser = new Parser(source);
-            sb.AppendLine(string.Format(_FUNCTION_LINE, var,(parser.MethodName==null ? "" : parser.MethodName+"=")));
-            sb.AppendLine((compress ? _START_CODE_MIN : _START_CODE));
-            sb.AppendLine(string.Format("{0}=this.cObj({0});", var));
-            foreach (IComponent comp in parser.Parts)
-                sb.AppendLine(comp.ToJSCode(var,compress));
-            sb.AppendLine("return ret;}");
+            foreach (Method m in parser.Methods)
+            {
+                string var = string.Format(DATA_VARIABLE_FORMAT, 1);
+                sb.AppendLine(string.Format(_FUNCTION_LINE, var, (m.Name == null ? "" : m.Name + "=")));
+                sb.AppendLine((compress ? _START_CODE_MIN : _START_CODE));
+                sb.AppendLine(string.Format("{0}=this.cObj({0});", var));
+                foreach (IComponent comp in m.Parts)
+                    sb.AppendLine(comp.ToJSCode(var, compress));
+                sb.AppendLine("return ret;}");
+            }
             return sb.ToString();
         }
     }
