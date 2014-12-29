@@ -30,15 +30,15 @@ namespace Org.Reddragonit.MustacheDotNet.Components
         ret+=($0==undefined ? '' : ($0==null ? '' : $0.toString()+'$1'));
     }}",
        @"if (($0==undefined ? false : $0.isArray)){{
-        ret+=this.pref($0.join('$1'));
+        ret+=pref($0.join('$1'));
     }}",
        @"else if (($0==undefined ? false : $0.isArray)){{
         for(var i=0;i<$0.length;i++){{
-            ret+=this.pref(($0.get(i)==undefined ? undefined : $0.get(i).get('$1')!=undefined)+(i+1<$0.length ? '$2' : ''));
+            ret+=pref(($0.get(i)==undefined ? undefined : $0.get(i).get('$1')!=undefined)+(i+1<$0.length ? '$2' : ''));
         }}
     }}",
        @"else{{
-        ret+=this.pref(($0==undefined ? '' : ($0==null ? '' : $0.toString()+'$1')));
+        ret+=pref(($0==undefined ? '' : ($0==null ? '' : $0.toString()+'$1')));
     }}"
             };
             _CODE_LINES_COMPRESS = new string[]{
@@ -96,7 +96,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
             }else if (_text.StartsWith("& "))
                 return string.Format("ret+=({0}==undefined ? '' : {0}.toString());", Utility.CreateVariableString(dataVariable, _text.Substring(2)));
             else 
-                return string.Format(@"ret+=this.pref(({0}==undefined ? '' : {0}.toString()));",
+                return string.Format(@"ret+=pref(({0}==undefined ? '' : {0}.toString()));",
                 Utility.CreateVariableString(dataVariable, _text.Trim('}')));
         }
     }
