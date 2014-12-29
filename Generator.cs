@@ -12,8 +12,7 @@ namespace Org.Reddragonit.MustacheDotNet
         internal const string DATA_VARIABLE_FORMAT = "data{0}";
 
         private const string _FUNCTION_LINE = "{1}function({0}){{var ret='';";
-        private const string _START_CODE = @"(function(){
-    function pref(txt){
+        private const string _START_CODE = @"function pref(txt){
         var pre = document.createElement('pre');
         var text=document.createTextNode(txt);
         pre.appendChild(text);
@@ -117,7 +116,7 @@ namespace Org.Reddragonit.MustacheDotNet
         public static string GenerateCode(string[] sources, bool compress)
         {
             WrappedStringBuilder sb = new WrappedStringBuilder(compress);
-            sb.AppendLine((compress ? _START_CODE_MIN : _START_CODE));
+            sb.AppendLine("(function(){"+(compress ? _START_CODE_MIN : _START_CODE));
             foreach (string str in sources)
                 sb.AppendLine(_GenerateCode(str, compress, false));
             sb.AppendLine("}).call(this);");
@@ -127,7 +126,7 @@ namespace Org.Reddragonit.MustacheDotNet
         public static string GenerateCode(List<string> sources, bool compress)
         {
             WrappedStringBuilder sb = new WrappedStringBuilder(compress);
-            sb.AppendLine((compress ? _START_CODE_MIN : _START_CODE));
+            sb.AppendLine("(function(){" + (compress ? _START_CODE_MIN : _START_CODE));
             foreach (string str in sources)
                 sb.AppendLine(_GenerateCode(str, compress,false));
             sb.AppendLine("}).call(this);");
@@ -146,7 +145,7 @@ namespace Org.Reddragonit.MustacheDotNet
             WrappedStringBuilder sb = new WrappedStringBuilder(compress);
             Parser parser = new Parser(source);
             if (includeFunctions)
-                sb.AppendLine((compress ? _START_CODE_MIN : _START_CODE));
+                sb.AppendLine("(function(){" + (compress ? _START_CODE_MIN : _START_CODE));
             foreach (Method m in parser.Methods)
             {
                 string var = string.Format(DATA_VARIABLE_FORMAT, 1);
@@ -154,7 +153,7 @@ namespace Org.Reddragonit.MustacheDotNet
                 sb.AppendLine(string.Format("{0}=cObj({0});", var));
                 foreach (IComponent comp in m.Parts)
                     sb.AppendLine(comp.ToJSCode(var, compress));
-                sb.AppendLine("return ret;}");
+                sb.AppendLine("return ret;};");
             }
             if (includeFunctions)
                 sb.AppendLine("}).call(this);");
