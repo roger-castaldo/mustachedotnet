@@ -13,28 +13,22 @@ namespace Org.Reddragonit.MustacheDotNet
         private string _text;
         private int _curIndex;
         private string _buf;
-        private List<IComponent> _parts;
-        public List<IComponent> Parts
-        {
-            get { return _parts; }
-        }
-        private string _methodName=null;
-        public string MethodName
-        {
-            get { return _methodName; }
-        }
+
+        private List<Method> _methods;
+        public List<Method> Methods { get { return _methods; } }
 
         public Parser(string text)
         {
             _text = text;
             _curIndex = 0; 
             _buf = "";
-            _parts = _Parse();
+            _methods = _Parse();
         }
 
-        private List<IComponent> _Parse()
+        private List<Method> _Parse()
         {
-            List<IComponent> ret = new List<IComponent>();
+            List<Method> ret = new List<Method>();
+            Method method = new Method();
             MatchCollection matches = _regPre.Matches(_text);
             string _curChars = "";
             while (_curIndex < _text.Length)
@@ -46,7 +40,7 @@ namespace Org.Reddragonit.MustacheDotNet
                     case "{{":
                         _buf = _buf.TrimEnd('{');
                         if (_buf.Length > 0)
-                            ret.Add(new StringConstant(_buf,_IsInPre(matches)));
+                            method.Parts.Add(new StringConstant(_buf,_IsInPre(matches)));
                         _buf = "";
                         _curIndex++;
                         string commandText = _ExtractCommand();
@@ -55,26 +49,34 @@ namespace Org.Reddragonit.MustacheDotNet
                             case '#':
                             case '/':
                             case '^':
-                                ret.Add(new IfComponent(commandText));
+                                method.Parts.Add(new IfComponent(commandText));
                                 break;
                             case '!':
                                 commandText = commandText.Substring(1);
                                 if (commandText.StartsWith("MethodName="))
-                                    _methodName = commandText.Substring("MethodName=".Length).Trim();
+                                {
+                                    if (method.Name != null)
+                                    {
+                                        method.Parts = _RecurMergeIfs(null, 0, method.Parts);
+                                        ret.Add(method);
+                                        method = new Method();
+                                    }
+                                    method.Name = commandText.Substring("MethodName=".Length).Trim();
+                                }
                                 else
-                                    ret.Add(new CommentComponent(commandText));
+                                    method.Parts.Add(new CommentComponent(commandText));
                                 break;
                             case '>':
-                                ret.Add(new SubTemplateComponent(commandText));
+                                method.Parts.Add(new SubTemplateComponent(commandText));
                                 break;
                             case '=':
                                 throw new Exception("Unable to change Delimeter.");
                                 break;
                             case '%':
-                                ret.Add(new FunctionComponent(commandText));
+                                method.Parts.Add(new FunctionComponent(commandText));
                                 break;
                             default:
-                                ret.Add(new VariableComponent(commandText));
+                                method.Parts.Add(new VariableComponent(commandText));
                                 break;
                         }
                         _curChars = _text[_curIndex-1].ToString();
@@ -91,8 +93,12 @@ namespace Org.Reddragonit.MustacheDotNet
                 }
             }
             if (_buf != "")
-                ret.Add(new StringConstant(_buf, _IsInPre(matches)));
-            ret = _RecurMergeIfs(null,0,ret);
+                method.Parts.Add(new StringConstant(_buf, _IsInPre(matches)));
+            if (method.Parts.Count > 0)
+            {
+                method.Parts = _RecurMergeIfs(null, 0, method.Parts);
+                ret.Add(method);
+            }
             return ret;
         }
 
