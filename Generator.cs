@@ -12,14 +12,14 @@ namespace Org.Reddragonit.MustacheDotNet
         internal const string DATA_VARIABLE_FORMAT = "data{0}";
 
         private const string _FUNCTION_LINE = "{1}function({0}){{var ret='';";
-        private const string _START_CODE = @"if (this.pref==undefined){
-    this.pref=function(txt){var pre = document.createElement('pre');
-    var text=document.createTextNode(txt);
-    pre.appendChild(text);
-    return pre.innerHTML;}
-}
-if (this.cObj==undefined){
-    this.cObj=function(obj){
+        private const string _START_CODE = @"(function(){
+    function pref(txt){
+        var pre = document.createElement('pre');
+        var text=document.createTextNode(txt);
+        pre.appendChild(text);
+        return pre.innerHTML;
+    }
+    function cObj(obj){
         if (obj==undefined){
             return undefined;
         }else if (obj==null){
@@ -30,7 +30,6 @@ if (this.cObj==undefined){
             return {
                 isArray:Array.isArray(obj)||obj.at!=undefined,
                 length:obj.length,
-                cObj:arguments.callee,
                 _obj:obj,
                 join:function(char){
                     if (this.isArray){
@@ -66,15 +65,14 @@ if (this.cObj==undefined){
                             }
                         }
                     }
-                    return (ret==undefined ? undefined : (ret==null ? null : (Array.isArray(ret)||ret.toString()=='[object Object]' ? this.cObj(ret) : ret)));
+                    return (ret==undefined ? undefined : (ret==null ? null : (Array.isArray(ret)||ret.toString()=='[object Object]' ? cObj(ret) : ret)));
                 },
                 toString:function(){
                     return this._obj.toString();
                 }
             };   
         }
-    }
-}";
+    }";
         private static readonly string _START_CODE_MIN = JSMinifier.Minify(_START_CODE);
 
         public static void GenerateCode(Stream[] sources, Stream destination, bool compress)
@@ -117,40 +115,48 @@ if (this.cObj==undefined){
 
         public static string GenerateCode(string[] sources, bool compress)
         {
-            StringBuilder sb = new StringBuilder();
+            WrappedStringBuilder sb = new WrappedStringBuilder(compress);
+            sb.AppendLine((compress ? _START_CODE_MIN : _START_CODE));
             foreach (string str in sources)
-            {
-                sb.AppendLine(GenerateCode(str, compress));
-            }
+                sb.AppendLine(_GenerateCode(str, compress, false));
+            sb.AppendLine("}).call(this);");
             return sb.ToString();
         }
 
         public static string GenerateCode(List<string> sources, bool compress)
         {
-            StringBuilder sb = new StringBuilder();
+            WrappedStringBuilder sb = new WrappedStringBuilder(compress);
+            sb.AppendLine((compress ? _START_CODE_MIN : _START_CODE));
             foreach (string str in sources)
-            {
-                sb.AppendLine(GenerateCode(str, compress));
-            }
+                sb.AppendLine(_GenerateCode(str, compress,false));
+            sb.AppendLine("}).call(this);");
             return sb.ToString();
         }
 
-        public static string GenerateCode(string source,bool compress)
+        public static string GenerateCode(string source, bool compress)
+        {
+            return _GenerateCode(source, compress, true);
+        }
+
+        private static string _GenerateCode(string source,bool compress,bool includeFunctions)
         {
             if ((source==null ? "" : source) == "")
                 return "";
             WrappedStringBuilder sb = new WrappedStringBuilder(compress);
             Parser parser = new Parser(source);
+            if (includeFunctions)
+                sb.AppendLine((compress ? _START_CODE_MIN : _START_CODE));
             foreach (Method m in parser.Methods)
             {
                 string var = string.Format(DATA_VARIABLE_FORMAT, 1);
                 sb.AppendLine(string.Format(_FUNCTION_LINE, var, (m.Name == null ? "" : m.Name + "=")));
-                sb.AppendLine((compress ? _START_CODE_MIN : _START_CODE));
-                sb.AppendLine(string.Format("{0}=this.cObj({0});", var));
+                sb.AppendLine(string.Format("{0}=cObj({0});", var));
                 foreach (IComponent comp in m.Parts)
                     sb.AppendLine(comp.ToJSCode(var, compress));
                 sb.AppendLine("return ret;}");
             }
+            if (includeFunctions)
+                sb.AppendLine("}).call(this);");
             return sb.ToString();
         }
     }
