@@ -30,6 +30,7 @@ namespace Org.Reddragonit.MustacheDotNet
             return {
                 isArray:Array.isArray(obj)||obj.at!=undefined,
                 length:obj.length,
+                cObj:arguments.callee,
                 _obj:obj,
                 join:function(char){
                     if (this.isArray){
@@ -65,7 +66,7 @@ namespace Org.Reddragonit.MustacheDotNet
                             }
                         }
                     }
-                    return (ret==undefined ? undefined : (ret==null ? null : (Array.isArray(ret)||ret.toString()=='[object Object]' ? cObj(ret) : ret)));
+                    return (ret==undefined ? undefined : (ret==null ? null : (Array.isArray(ret)||ret.toString()=='[object Object]' ? this.cObj(ret) : ret)));
                 },
                 toString:function(){
                     return this._obj.toString();
