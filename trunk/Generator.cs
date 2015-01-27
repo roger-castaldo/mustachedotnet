@@ -1,6 +1,7 @@
 ﻿using Org.Reddragonit.MustacheDotNet.Components;
 using Org.Reddragonit.MustacheDotNet.Utilities;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -146,6 +147,30 @@ namespace Org.Reddragonit.MustacheDotNet
             Parser parser = new Parser(source);
             if (includeFunctions)
                 sb.AppendLine("(function(){" + (compress ? _START_CODE_MIN : _START_CODE));
+            Hashtable nspaces = new Hashtable();
+            foreach (Method m in parser.Methods)
+            {
+                if ((m.Name==null ? "" : m.Name).Contains(".")){
+                    Hashtable ht = nspaces;
+                    foreach (string str in m.Name.Split('.'))
+                    {
+                        if (!m.Name.EndsWith(str))
+                        {
+                            if (!ht.ContainsKey(str))
+                                ht.Add(str, new Hashtable());
+                            ht = (Hashtable)ht[str];
+                        }
+                    }
+                }
+            }
+            if (nspaces.Count > 0)
+            {
+                foreach (string str in nspaces.Keys)
+                {
+                    sb.AppendLine(string.Format("window.{0}=window.{0}||{{}};", str));
+                    _RecurAddNamespaces(sb,str, (Hashtable)nspaces[str]);
+                }
+            }
             foreach (Method m in parser.Methods)
             {
                 string var = string.Format(DATA_VARIABLE_FORMAT, 1);
@@ -158,6 +183,15 @@ namespace Org.Reddragonit.MustacheDotNet
             if (includeFunctions)
                 sb.AppendLine("}).call(this);");
             return sb.ToString();
+        }
+
+        private static void _RecurAddNamespaces(WrappedStringBuilder sb,string basePath, Hashtable nspaces)
+        {
+            foreach (string str in nspaces.Keys)
+            {
+                sb.AppendLine(string.Format("{0}.{1}={0}.{1}||{{}};", basePath, str));
+                _RecurAddNamespaces(sb, basePath + "." + str, (Hashtable)nspaces[str]);
+            }
         }
     }
 }
