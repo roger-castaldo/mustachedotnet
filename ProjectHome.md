@@ -1,0 +1,1 @@
+Used to translate mustache.js templates into straight js code.  Allows for easier writing of js to html generating code.  Also integrates with Backbone by checking for get and at functions and automatically using them accordingly.
