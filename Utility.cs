@@ -33,9 +33,10 @@ namespace Org.Reddragonit.MustacheDotNet
             }
             else
             {
-                return string.Format("({0}==undefined ? undefined : {0}.get('{1}'))",
+                return string.Format("{2}({0}==undefined ? undefined : {0}.get('{1}'))",
                         dataVariable,
-                        variableName);
+                        (variableName.StartsWith("!") ? variableName.Substring(1) : variableName),
+                        (variableName.StartsWith("!") ? "!" : ""));
             }
         }
 
