@@ -8,6 +8,7 @@ namespace Org.Reddragonit.MustacheDotNet
     internal static class Utility
     {
         private static readonly Regex _RegNum = new Regex("\\d+", RegexOptions.Compiled | RegexOptions.ECMAScript);
+        private static readonly Regex _RegEscape = new Regex("%esc%$", RegexOptions.Compiled | RegexOptions.ECMAScript);
         
         public static string CreateVariableString(string dataVariable, string variableName)
         {
@@ -33,10 +34,17 @@ namespace Org.Reddragonit.MustacheDotNet
             }
             else
             {
-                return string.Format("{2}({0}==undefined ? undefined : {0}.get('{1}'))",
-                        dataVariable,
-                        (variableName.StartsWith("!") ? variableName.Substring(1) : variableName),
-                        (variableName.StartsWith("!") ? "!" : ""));
+                Match m = _RegEscape.Match(variableName);
+                if (m.Success)
+                {
+                    variableName = variableName.Substring(0, m.Index);
+                    string comm = CreateVariableString(dataVariable, variableName);
+                    return (comm.StartsWith("!") ? "!escAll(" + comm.Substring(1) + ")" : "escAll(" + comm + ")");
+                }else
+                    return string.Format("{2}({0}==undefined ? undefined : {0}.get('{1}'))",
+                            dataVariable,
+                            (variableName.StartsWith("!") ? variableName.Substring(1) : variableName),
+                            (variableName.StartsWith("!") ? "!" : ""));
             }
         }
 

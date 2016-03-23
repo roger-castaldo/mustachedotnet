@@ -44,7 +44,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
                                         case '+':
                                             sb.Append(str[0]);
                                             if (str.Length > 1)
-                                                sb.Append(Utility.CreateVariableString(dataVariable, str.Substring(1)));
+                                                sb.Append(Utility.CreateVariableString(dataVariable, (tmp[0]=="eval" && !str.Substring(1).EndsWith("%esc%") ? str.Substring(1)+"%esc%" : str.Substring(1))));
                                             break;
                                         default:
                                             throw new Exception("Unable to parse function code");
@@ -56,7 +56,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
                         sb.Append((x + 1 == tmp.Count ? "" : ","));
                         break;
                     default:
-                        sb.Append(Utility.CreateVariableString(dataVariable, tmp[x]) + (x + 1 == tmp.Count ? "" : ","));
+                        sb.Append(Utility.CreateVariableString(dataVariable,(tmp[0]=="eval"&&!tmp[x].EndsWith("%esc%") ?  tmp[x] + "%esc%" : tmp[x])) + (x + 1 == tmp.Count ? "" : ","));
                         break;
                 }
             }

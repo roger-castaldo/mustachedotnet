@@ -73,6 +73,23 @@ namespace Org.Reddragonit.MustacheDotNet
                 }
             };   
         }
+    }
+    function escAll(src){
+        if (src==undefined){
+            return src;
+        }else if (typeof src === 'string' || src instanceof String){
+            if (this.escapes==undefined){ this.escapes = [['\\','\\\\'],['""','\""'],['\'','\\\'']]; }
+            var ret = src;
+            for(var x=0;x<this.escapes.length;x++){
+                var lastIndexOf = ret.indexOf(this.escapes[x][0]);
+                while (lastIndexOf>=0){
+                    ret = ret.substring(0,lastIndexOf)+this.escapes[x][1]+ret.substring(lastIndexOf+this.escapes[x][0].length);
+                    lastIndexOf = ret.indexOf(this.escapes[x][0],lastIndexOf+this.escapes[x][1].length);
+                }
+            }
+            return ret;
+        }
+        return src;
     }";
         private static readonly string _START_CODE_MIN = JSMinifier.Minify(_START_CODE);
 
