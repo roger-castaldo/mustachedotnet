@@ -22,7 +22,7 @@ namespace Org.Reddragonit.MustacheDotNet.Components
             WrappedStringBuilder sb = new WrappedStringBuilder(compress);
             List<string> tmp = Utility.ParseCommandArguements(_text.Substring(1));
             if (tmp[0].StartsWith("$"))
-                sb.AppendFormat("({0}==undefined ? undefined : {0}.{1}(",
+                sb.AppendFormat("({0}==undefined ? undefined : {0}._obj.{1}(",
                     Utility.CreateVariableString(dataVariable, tmp[0].Substring(1, tmp[0].LastIndexOf(".") - 1)),
                     tmp[0].Substring(tmp[0].LastIndexOf(".") + 1));
             else
