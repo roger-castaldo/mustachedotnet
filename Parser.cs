@@ -121,29 +121,31 @@ namespace Org.Reddragonit.MustacheDotNet
             List<IComponent> ret = new List<IComponent>();
             for (int x = index; x < comps.Count; x++)
             {
-                switch (comps[x].Text[0])
+                if (comps[x] is IfComponent)
                 {
-                    case '#':
-                    case '^':
-                        if (comps[x].Text != "#else#")
-                        {
-                            IfComponent ifc = (IfComponent)comps[x];
-                            ifc.Children = _RecurMergeIfs(ifc.Text.Substring(1), x + 1, comps);
-                            ret.Add(ifc);
-                            x += ifc.Length;
-                        }else
-                            ret.Add(comps[x]);
-                        break;
-                    case '/':
+                    switch (comps[x].Text[0])
+                    {
+                        case '#':
+                        case '^':
+                            if (comps[x].Text != "#else#")
+                            {
+                                IfComponent ifc = (IfComponent)comps[x];
+                                ifc.Children = _RecurMergeIfs(ifc.Text.Substring(1), x + 1, comps);
+                                ret.Add(ifc);
+                                x += ifc.Length;
+                            }
+                            else
+                                ret.Add(comps[x]);
+                            break;
+                        case '/':
                             if ((ifText == null ? "" : ifText) == comps[x].Text.Substring(1))
                                 return ret;
                             else
                                 ret.Add(comps[x]);
-                        break;
-                    default:
-                        ret.Add(comps[x]);
-                        break;
-                }
+                            break;
+                    }
+                }else
+                    ret.Add(comps[x]);
             }
             return ret;
         }
